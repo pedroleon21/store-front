@@ -1,0 +1,21 @@
+<div class="login-container">
+  <h2>Login</h2>
+  <form (ngSubmit)="login(username.value, password.value)">
+    <mat-form-field class="form-group">
+      <input matInput placeholder="Username" name="username" #username />
+    </mat-form-field>
+    <mat-form-field class="form-group">
+      <input
+        matInput
+        type="password"
+        placeholder="Password"
+        name="password"
+        #password
+      />
+    </mat-form-field>
+    <button mat-raised-button color="primary">Login</button>
+    <button mat-button color="accent" (click)="navigateToSubscribe()">
+      Subscribe
+    </button>
+  </form>
+</div>

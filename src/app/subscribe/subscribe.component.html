@@ -1,0 +1,30 @@
+<div class="subscribe-container">
+  <h1>Subscribe Page</h1>
+  <form
+    class="subscribe-form"
+    (ngSubmit)="subscribe(subscriberName.value, email.value, password.value)"
+  >
+    <mat-form-field class="form-group">
+      <input
+        matInput
+        placeholder="Name"
+        type="text"
+        name="subscriberName"
+        #subscriberName
+      />
+    </mat-form-field>
+    <mat-form-field class="form-group">
+      <input matInput placeholder="Email" type="email" name="email" #email />
+    </mat-form-field>
+    <mat-form-field class="form-group">
+      <input
+        matInput
+        placeholder="Password"
+        type="password"
+        name="password"
+        #password
+      />
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Subscribe</button>
+  </form>
+</div>

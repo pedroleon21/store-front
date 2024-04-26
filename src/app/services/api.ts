@@ -7,6 +7,23 @@ export interface User {
     email: string
     password: string
 }
+export interface Usuario {
+    id: number
+    nome: string
+    email: string
+    dtCriacao: Date
+    username: string
+}
+export interface LojaForm {
+    nome: string
+    userId: number
+}
+export interface Loja {
+    lojaId: number
+    nome: string
+    dtCriacao: Date
+    usuario: Usuario
+}
 export interface Produto {
     Id: number
     nome: string

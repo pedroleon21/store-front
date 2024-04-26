@@ -23,8 +23,10 @@ export class HomeComponent {
 
   login(username, password) {
     const data: Auth = { username, password };
-    console.log('data', data);
     this.service.login(data)
-      .then(res => this.router.navigateByUrl('/produtos'))
+      .then(res => {
+        localStorage.setItem('userId', res);
+        this.router.navigateByUrl('/produtos');
+      })
   }
 }

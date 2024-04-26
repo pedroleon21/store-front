@@ -1,33 +1,38 @@
 <div class="box">
   <div>
-    <h2>Produtos</h2>
+    <h2>Loja</h2>
   </div>
-  <div class="navigation-buttons">
-    <button mat-raised-button color="primary" (click)="navigate('/loja')">
-      Nova loja
-    </button>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="navigate('/novo-produto')"
-    >
-      Novo Produto
-    </button>
+  {{ showForm }}
+  <div mat-dialog-content class="form-loja">
+    <!-- Form for creating a new Loja -->
+    <form #createForm="ngForm" (ngSubmit)="cadastrar(lojaName.value)">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Adicionar loja"
+          name="lojaName"
+          ngModel
+          required
+          #lojaName
+        />
+        <mat-error
+          *ngIf="
+            createForm.controls['lojaName'].invalid &&
+            createForm.controls['lojaName'].touched
+          "
+        >
+          Loja name is required
+        </mat-error>
+      </mat-form-field>
+      <button mat-button color="primary" [disabled]="createForm.invalid">
+        Submit
+      </button>
+    </form>
   </div>
   <table mat-table class="full-width-table" aria-label="Elements">
     <ng-container matColumnDef="nome">
       <th mat-header-cell *matHeaderCellDef>Nome</th>
       <td mat-cell *matCellDef="let row">{{ row.nome }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="descricao">
-      <th mat-header-cell *matHeaderCellDef>Descrição</th>
-      <td mat-cell *matCellDef="let row">{{ row.descricao }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="preco">
-      <th mat-header-cell *matHeaderCellDef>Preço</th>
-      <td mat-cell *matCellDef="let row">{{ row.preco }}</td>
     </ng-container>
 
     <ng-container matColumnDef="dtCriacao">
@@ -40,20 +45,19 @@
         }}
       </td>
     </ng-container>
-    <ng-container matColumnDef="acoes">
+    <ng-container matColumnDef="acao">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let row" class="justify-content-between">
+      <td mat-cell *matCellDef="let row">
         <button
           mat-mini-fab
-          color="warn"
+          color="primary"
           aria-label="Excluir produto"
-          (click)="delete(row.id)"
+          (click)="toggleShowForm()"
         >
-          <mat-icon>delete_forever</mat-icon>
+          +
         </button>
       </td>
     </ng-container>
-
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>

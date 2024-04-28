@@ -1,0 +1,32 @@
+.box {
+  margin: auto; 
+  padding: 20px;
+  
+}
+
+.box h2 {
+  margin-top: 0;
+}
+
+.mat-form-field {
+  width: 100%; 
+  justify-content: flex-start;
+  display: flex;
+  margin-bottom: 15px; 
+}
+
+button {
+  margin: 15px; 
+}
+.file-upload {
+  display: flex;
+  align-items: center;
+}
+
+.file-upload-name {
+  flex: 1;
+  margin-right: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Loja, LojaForm } from "./api";
+import { Loja, LojaForm, PageResult } from "./api";
 @Injectable({
     providedIn: 'root',
 })
@@ -11,11 +11,17 @@ export class LojaService {
         return this.httpClient.post<Loja>(this.uri, data)
             .toPromise()
     }
-    list(userId: number) {
-        return this.httpClient.get<Loja[]>(`${this.uri}`, {
+    list(userId?: number, pageIndex?: number, pageSize?: number) {
+        return this.httpClient.get<PageResult<Loja>>(`${this.uri}`, {
             params: {
-                userId
+
+                pageIndex,
+                pageSize
             }
         })
+    }
+    delete(id: number) {
+        return this.httpClient.delete(`${this.uri}/${id}`)
+            .toPromise()
     }
 }

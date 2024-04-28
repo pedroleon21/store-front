@@ -31,4 +31,19 @@ export interface Produto {
     preco: number
     lojaId: number
     dtCriacao: Date
+    fotoBase64: string
+}
+ export interface ProdutoFrom {
+    nome ?: string;
+    descricao ?: string;
+    preco?: number;
+    lojaId?: number;
+    fotoBase64 ?: string;
+}
+
+export interface PageResult<T>{
+    count: number
+    pageIndex: number
+    pageSize: number
+    items: Array<T>
 }

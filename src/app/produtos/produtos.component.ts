@@ -3,7 +3,7 @@ import { MaterialModule } from '../material.module';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Produto } from '../services/api';
 import { ProdutoService } from '../services/produto.service';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 
 @Component({
@@ -20,16 +20,22 @@ export class ProdutosComponent implements AfterViewInit {
   @ViewChild(MatTable) table!: MatTable<Produto>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource: MatTableDataSource<Produto> = new MatTableDataSource<Produto>();
-  displayedColumns = ['nome', 'descricao', 'preco', 'dtCriacao', 'acoes'];
+  pageIndex: number = 0;
+  pageSize: number = 5;
+  totalElements: number = 0;
+
+  displayedColumns = ['nome', 'descricao', 'preco', 'dtCriacao', 'foto', 'acoes'];
   ngAfterViewInit(): void {
-    this.paginator = this.dataSource.paginator;
+    this.dataSource.paginator = this.paginator;
+
     this.change()
   }
-  change() {
-    this.service.list()
+  change($event: PageEvent = { length: 0, pageIndex: this.pageIndex, pageSize: this.pageSize }) {
+    this.service.list($event.pageIndex, $event.pageSize)
       .subscribe(
         res => {
-          this.table.dataSource = res
+          this.table.dataSource = res.items
+          this.totalElements = res.count
         }
       )
   }
@@ -37,7 +43,7 @@ export class ProdutosComponent implements AfterViewInit {
     this.service.delete(id)
       .then(res => this.change())
   }
-  navigate(path) {
-    this.router.navigateByUrl(path);
+  navigate() {
+    this.router.navigateByUrl('/loja');
   }
 }

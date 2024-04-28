@@ -1,0 +1,31 @@
+<div class="box">
+  <div>
+    <h2>Produtos</h2>
+    <div>
+      <button mat-raised-button color="primary">
+          Loja
+      </button>
+    </div>
+  </div>
+  <div>
+      <form (ngSubmit)="onSubmit(nome.value, descricao.value, preco.value)">
+  <mat-form-field style="width: 100%">
+    <input matInput placeholder="Nome" [(ngModel)]="produto.nome" name="nome" required #nome>
+  </mat-form-field>
+  <mat-form-field style="width: 100%">
+    <textarea matInput placeholder="Descrição" [(ngModel)]="produto.descricao" name="descricao" #descricao></textarea>
+  </mat-form-field>
+  <mat-form-field style="width: 100%">
+    <input matInput type="number" placeholder="Preço" [(ngModel)]="produto.preco" name="preco" required #preco>
+  </mat-form-field>
+  <div class="file-upload" style="width: 100%">
+    <button type="button" color="primary" mat-flat-button (click)="fileInput.click()" style="width: 100%">
+      <span class="file-upload-name">{{ selectedFileName || 'Selecione o arquivo' }}</span>
+      <mat-icon>attach_file</mat-icon>    
+    </button>
+    <input hidden #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none;" #foto>
+  </div>
+  <button mat-raised-button color="primary" type="submit">Salvar</button>
+</form>
+
+  </div>

@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Produto } from "./api";
+import { PageResult, Produto, ProdutoFrom } from "./api";
 
 @Injectable({
     providedIn: 'root',
@@ -12,7 +12,14 @@ export class ProdutoService {
         return this.httpClient.delete(`${this.uri}/${id}`)
             .toPromise();
     }
-    list() {
-        return this.httpClient.get<Produto[]>(this.uri);
+    list(pageIndex: number, pageSize: number) {
+        return this.httpClient.get<PageResult<Produto>>(this.uri, {
+            params: {
+                pageIndex, pageSize
+            }
+        });
+    }
+    create(form: ProdutoFrom) {
+        return this.httpClient.post<void>(`${this.uri}`, form)
     }
 }

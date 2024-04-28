@@ -8,6 +8,7 @@ import { LojaService } from '../services/loja.service';
 import { UserService } from '../services/user.service';
 import { Usuario } from '../services/api';
 import { MaterialModule } from '../material.module';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-loja',
@@ -18,7 +19,7 @@ import { MaterialModule } from '../material.module';
 })
 export class LojaComponent implements OnInit {
 
-  constructor(private lojaService: LojaService, private userService: UserService, private router: Router) { }
+  constructor(private lojaService: LojaService, private userService: UserService, private router: Router, private snackBar: MatSnackBar) { }
   async ngOnInit() {
     this.paginator = this.dataSource.paginator;
     const userId = localStorage.getItem('userId');
@@ -44,7 +45,12 @@ export class LojaComponent implements OnInit {
     const Id = localStorage.getItem('userId');
     const novaLoja: LojaForm = { nome, userId: +Id }
     this.lojaService.create(novaLoja)
-      .then(res => this.change())
+      .then(res => {
+        this.snackBar.open("Loja cadastrada", "fechar", {
+          duration: 5000
+        })
+        this.change()
+      })
   }
   cadastrarNovoProduto(id: number) {
     this.router.navigateByUrl(`/novo-produto?lojaId=${id}`)
@@ -53,8 +59,12 @@ export class LojaComponent implements OnInit {
     this.router.navigateByUrl('/produtos')
   }
   deleteStore(id: number) {
-    console.log('id', id)
     this.lojaService.delete(id)
-      .then(res => this.change())
+      .then(res => {
+        this.snackBar.open("Produto deletado", "fechar", {
+          duration: 5000
+        })
+        this.change()
+      })
   }
 }

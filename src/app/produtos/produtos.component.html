@@ -41,7 +41,7 @@
       </ng-container>
       <ng-container matColumnDef="acoes">
         <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let row" class="justify-content-between">
+        <td mat-cell *matCellDef="let row" style="display: flex; justify-content: center;">
           <button
             mat-mini-fab
             color="warn"
@@ -49,6 +49,14 @@
             (click)="delete(row.id)"
           >
             <mat-icon>delete_forever</mat-icon>
+          </button>
+           <button
+            mat-mini-fab
+            color="primary"
+            aria-label="Excluir produto"
+            (click)="editar(row.id)"
+          >
+            <mat-icon>mode_edit</mat-icon>
           </button>
         </td>
       </ng-container>

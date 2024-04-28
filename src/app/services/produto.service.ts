@@ -22,4 +22,10 @@ export class ProdutoService {
     create(form: ProdutoFrom) {
         return this.httpClient.post<void>(`${this.uri}`, form)
     }
+    find(id: number) {
+        return this.httpClient.get<Produto>(`${this.uri}/${id}`)
+    }
+    update(form: Produto) {
+        return this.httpClient.put<Produto>(`${this.uri}`, form)
+    }
 }

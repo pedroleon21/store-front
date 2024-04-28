@@ -5,6 +5,7 @@ import { Produto } from '../services/api';
 import { ProdutoService } from '../services/produto.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-produtos',
@@ -15,7 +16,7 @@ import { Router } from '@angular/router';
 })
 export class ProdutosComponent implements AfterViewInit {
 
-  constructor(private service: ProdutoService, private router: Router) { }
+  constructor(private service: ProdutoService, private router: Router, private snackBar: MatSnackBar) { }
 
   @ViewChild(MatTable) table!: MatTable<Produto>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -39,9 +40,22 @@ export class ProdutosComponent implements AfterViewInit {
         }
       )
   }
+  editar(id: number) {
+    this.router.navigateByUrl(`/novo-produto?produtoId=${id}`)
+  }
   delete(id: number) {
     this.service.delete(id)
-      .then(res => this.change())
+      .then(res => {
+        this.change()
+        this.snackBar.open("Deletado com sucesso", "Fechar", {
+          duration: 5000
+        })
+      })
+      .catch(() => {
+        this.snackBar.open("Erro ao deletar", "Fechar", {
+          duration: 5000
+        })
+      })
   }
   navigate() {
     this.router.navigateByUrl('/loja');

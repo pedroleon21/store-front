@@ -47,3 +47,6 @@ export interface PageResult<T>{
     pageSize: number
     items: Array<T>
 }
+export interface ErrorBody {
+    error: string
+}

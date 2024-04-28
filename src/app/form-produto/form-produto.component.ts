@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProdutoService } from '../services/produto.service';
-import { ProdutoFrom } from '../services/api';
+import { Produto, ProdutoFrom } from '../services/api';
 import { MaterialModule } from '../material.module';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-form-produto',
@@ -12,16 +13,23 @@ import { MaterialModule } from '../material.module';
   styleUrl: './form-produto.component.css'
 })
 export class FormProdutoComponent implements OnInit {
-  constructor(private route: ActivatedRoute, private service: ProdutoService, private router: Router) { }
+  constructor(private route: ActivatedRoute, private service: ProdutoService, private router: Router, private snackBar: MatSnackBar) { }
   lojaId: number;
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       if (params && params["lojaId"])
         this.lojaId = params["lojaId"] as number;
+      if (params && params["produtoId"])
+        this.service.find(+params["produtoId"])
+          .subscribe(res => {
+            this.selectedFileName = "Substituir foto"
+            this.produto = res
+            this.lojaId = res.lojaId
+          })
     });
   }
   fotoBase64?: string
-  produto: ProdutoFrom = {};
+  produto?: Produto;
   selectedFileName?: string
 
   onFileSelected(event: any) {
@@ -42,16 +50,46 @@ export class FormProdutoComponent implements OnInit {
     };
   }
   onSubmit(nome: string, descricao: string, preco: string) {
-    // You can use nome, descricao, preco here as needed
-    const produto: ProdutoFrom = { nome: nome, descricao: descricao, preco: +preco, fotoBase64: this.fotoBase64, lojaId: this.lojaId };
+
+    if (!!this.produto) {
+      const produto: Produto = { ...this.produto }
+      produto.descricao = descricao
+      produto.nome = nome
+      produto.preco = +preco
+      produto.fotoBase64 = this.fotoBase64 ? this.fotoBase64 : produto.fotoBase64
+      this.service.update(produto)
+        .toPromise()
+        .then(res => {
+          this.snackBar.open("Atualizado com sucesso!", "Fechar", {
+            duration: 5000
+          })
+          this.navigateProdutos()
+        })
+        .catch(() => {
+          this.snackBar.open("Falha ao atualizar!", "Fechar", {
+            duration: 5000
+          })
+        })
+      return
+    }
+    const produto: ProdutoFrom = { nome: nome, descricao: descricao, preco: +preco, fotoBase64: this.fotoBase64, lojaId: this.lojaId }
+    this.create(produto)
+  }
+  create(produto) {
     this.service.create(produto).subscribe(
       response => {
-        this.router.navigateByUrl("/produtos")
+        this.snackBar.open('Produto cadastrado', "Fechar", {
+          duration: 5000
+        })
+        this.navigateProdutos()
       },
       error => {
         console.error('Error creating produto:', error);
         // Handle error cases here
       }
     );
+  }
+  navigateProdutos() {
+    this.router.navigateByUrl("/produtos")
   }
 }

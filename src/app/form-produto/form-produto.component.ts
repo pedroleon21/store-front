@@ -14,7 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class FormProdutoComponent implements OnInit {
   constructor(private route: ActivatedRoute, private service: ProdutoService, private router: Router, private snackBar: MatSnackBar) { }
-  lojaId: number;
+  lojaId?: number;
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       if (params && params["lojaId"])
@@ -24,12 +24,11 @@ export class FormProdutoComponent implements OnInit {
           .subscribe(res => {
             this.selectedFileName = "Substituir foto"
             this.produto = res
-            this.lojaId = res.lojaId
           })
     });
   }
   fotoBase64?: string
-  produto?: Produto;
+  produto?: ProdutoFrom = {};
   selectedFileName?: string
 
   onFileSelected(event: any) {
@@ -50,30 +49,33 @@ export class FormProdutoComponent implements OnInit {
     };
   }
   onSubmit(nome: string, descricao: string, preco: string) {
+    if (!this.lojaId) {
+      console.log('aqui')
+      const form: Produto = this.produto as Produto
+      form.descricao = descricao
+      form.nome = nome
+      form.preco = +preco
+      form.fotoBase64 = this.fotoBase64 || this.produto.fotoBase64
 
-    if (!!this.produto) {
-      const produto: Produto = { ...this.produto }
-      produto.descricao = descricao
-      produto.nome = nome
-      produto.preco = +preco
-      produto.fotoBase64 = this.fotoBase64 ? this.fotoBase64 : produto.fotoBase64
-      this.service.update(produto)
-        .toPromise()
-        .then(res => {
-          this.snackBar.open("Atualizado com sucesso!", "Fechar", {
-            duration: 5000
-          })
-          this.navigateProdutos()
-        })
-        .catch(() => {
-          this.snackBar.open("Falha ao atualizar!", "Fechar", {
-            duration: 5000
-          })
-        })
-      return
+      return this.update(form)
     }
     const produto: ProdutoFrom = { nome: nome, descricao: descricao, preco: +preco, fotoBase64: this.fotoBase64, lojaId: this.lojaId }
     this.create(produto)
+  }
+  update(form: Produto) {
+    this.service.update(form)
+      .toPromise()
+      .then(res => {
+        this.snackBar.open("Atualizado com sucesso!", "Fechar", {
+          duration: 5000
+        })
+        this.navigateProdutos()
+      })
+      .catch(() => {
+        this.snackBar.open("Falha ao atualizar!", "Fechar", {
+          duration: 5000
+        })
+      })
   }
   create(produto) {
     this.service.create(produto).subscribe(

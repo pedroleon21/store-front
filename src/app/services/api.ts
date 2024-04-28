@@ -34,8 +34,10 @@ export interface Produto {
     fotoBase64: string
 }
  export interface ProdutoFrom {
+     Id?: number
     nome ?: string;
     descricao ?: string;
+     dtCriacao?: Date
     preco?: number;
     lojaId?: number;
     fotoBase64 ?: string;
